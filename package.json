@@ -1,0 +1,9 @@
+{
+  "name": "sans-voir-chess",
+  "scripts": {
+    "dev": "wrangler pages dev ."
+  },
+  "devDependencies": {
+    "wrangler": "^4.31.0"
+  }
+}

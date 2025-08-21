@@ -1,0 +1,246 @@
+import { themeSheet } from "../ui-theme.js";
+
+// Define the canonical list of widgets available in the app.
+const AVAILABLE_WIDGETS = [
+  { tag: "about-widget",   title: "About" },
+  { tag: "blindfold-app",  title: "Blindfold Game" },
+  { tag: "square-color",   title: "Square Color" },
+  { tag: "knight-path",    title: "Knight Path" },
+  { tag: "bishop-path",    title: "Bishop Path" },
+  { tag: "mate-trainer",   title: "Mate Trainer" },
+];
+
+const LS_KEY = "svc.widgets";
+
+customElements.define("app-shell", class extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.state = {
+      widgets: this.loadState()
+    };
+  }
+
+  connectedCallback() {
+    this.shadowRoot.adoptedStyleSheets = [themeSheet];
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host { display: block; min-height: 100dvh; }
+        .layout {
+          display: grid;
+          grid-template-columns: 260px 1fr;
+        }
+        /* Mobile: collapsible sidebar */
+        @media (max-width: 640px) {
+          .layout {
+            grid-template-columns: 1fr;
+          }
+          aside {
+            display: none;
+          }
+          aside.open {
+            display: block;
+            position: sticky; top: 58px; z-index: 10;
+            background: var(--border);
+            border-bottom: 2px solid var(--off-black);
+          }
+        }
+
+        header.appbar {
+          display: none;
+        }
+        @media (max-width: 640px) {
+          header.appbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-3);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 11;
+            background: var(--card);
+          }
+
+          header.appbar span {
+            display: flex;
+            align-items: center;
+          }
+        }
+
+        aside {
+          padding: var(--space-3);
+          border-right: 1px solid var(--border);
+        }
+        .side-card {
+          background: var(--card);
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          padding: var(--space-3);
+        }
+        .side-card + .side-card { margin-top: var(--space-3); }
+
+        .section-title {
+          font-weight: 700; margin: 0 0 var(--space-2);
+        }
+        .list { display: grid; gap: 6px; }
+        .row {
+          display: flex; align-items: center; justify-content: space-between;
+          gap: var(--space-2);
+          padding: 6px 0;
+          border-bottom: 1px dashed var(--border);
+        }
+        .row:last-child { border-bottom: 0; }
+
+        .btn-sm {
+          appearance: none; border: 1px solid var(--border);
+          background: transparent; color: var(--fg);
+          padding: 4px 8px; border-radius: 7px; cursor: pointer; font-size: 0.9rem;
+        }
+        .btn-sm:hover { filter: brightness(0.98); }
+        .btn-sm:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .btn-add { background: var(--accent); color: var(--accent-contrast); border-color: transparent; }
+        .btn-danger { color: var(--danger); border-color: var(--border); }
+
+        main { min-width: 0; }
+        .app-grid {
+          column-gap: var(--space-3, 12px);
+          padding: var(--space-3, 12px);
+        }
+        .app-grid > * {
+          break-inside: avoid;
+          margin-bottom: var(--space-3, 12px);
+          display: block;
+        }
+        @media (max-width: 640px) { .app-grid { column-count: 1; } }
+        @media (min-width: 641px) and (max-width: 1024px) { .app-grid { column-count: 2; } }
+        @media (min-width: 1025px) { .app-grid { column-count: 3; } }
+      </style>
+
+      <header class="appbar">
+        <span>
+          <img src="/static/img/icon-192.png" width="32" alt="Sans Voir Chess">
+          <strong>&nbsp;Sans Voir Chess</strong>
+        </span>
+        <button class="btn btn-primary" id="toggleSidebar" type="button">Widgets</button>
+      </header>
+
+      <div class="layout">
+        <aside id="sidebar">
+          <div class="side-card">
+            <h3 class="section-title">Current</h3>
+            <div class="list" id="currentList"></div>
+          </div>
+          <div class="side-card">
+            <h3 class="section-title">Available</h3>
+            <div class="list" id="availableList"></div>
+          </div>
+        </aside>
+
+        <main>
+          <div class="app-grid" id="grid"></div>
+        </main>
+      </div>
+    `;
+
+    // Mobile toggle
+    this.shadowRoot.querySelector("#toggleSidebar")?.addEventListener("click", () => {
+      const aside = this.shadowRoot.querySelector("#sidebar");
+      aside.classList.toggle("open");
+    });
+
+    // Listen for remove events coming from tile-title inside any widget
+    this.shadowRoot.addEventListener("svc:remove-me", (e) => {
+      const path = e.composedPath?.() ?? [];
+      // Find the top-level custom element inside #grid
+      const grid = this.shadowRoot.querySelector("#grid");
+      const hostEl = path.find(el =>
+        el instanceof HTMLElement &&
+        el.parentElement === grid &&
+        el.tagName?.includes("-")
+      );
+      if (!hostEl) return;
+
+      const tag = hostEl.tagName.toLowerCase();
+      this.removeWidget(tag);
+    });
+
+    this.renderSidebar();
+    this.renderGrid();
+  }
+
+  loadState() {
+    try {
+      const json = localStorage.getItem(LS_KEY);
+      if (!json) return ["about-widget"];
+      const arr = JSON.parse(json);
+      if (!Array.isArray(arr) || !arr.every(x => typeof x === "string")) throw 0;
+      return arr;
+    } catch { return ["about-widget"]; }
+  }
+
+  saveState() {
+    localStorage.setItem(LS_KEY, JSON.stringify(this.state.widgets));
+  }
+
+  renderSidebar() {
+    const currentList = this.shadowRoot.querySelector("#currentList");
+    const availableList = this.shadowRoot.querySelector("#availableList");
+    currentList.innerHTML = "";
+    availableList.innerHTML = "";
+
+    const currentSet = new Set(this.state.widgets);
+
+    // Current
+    this.state.widgets.forEach(tag => {
+      const meta = AVAILABLE_WIDGETS.find(w => w.tag === tag) || { title: tag, tag };
+      const row = document.createElement("div");
+      row.className = "row";
+      row.innerHTML = `
+        <span>${meta.title}</span>
+        <button type="button" class="btn-sm btn-danger" data-tag="${tag}">Remove</button>
+      `;
+      row.querySelector("button").addEventListener("click", () => this.removeWidget(tag));
+      currentList.appendChild(row);
+    });
+
+    // Available
+    AVAILABLE_WIDGETS
+      .filter(w => !currentSet.has(w.tag))
+      .forEach(w => {
+        const row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML = `
+          <span>${w.title}</span>
+          <button type="button" class="btn-sm btn-add" data-tag="${w.tag}">Add</button>
+        `;
+        row.querySelector("button").addEventListener("click", () => this.addWidget(w.tag));
+        availableList.appendChild(row);
+      });
+  }
+
+  renderGrid() {
+    const grid = this.shadowRoot.querySelector("#grid");
+    grid.innerHTML = "";
+    for (const tag of this.state.widgets) {
+      const el = document.createElement(tag);
+      grid.appendChild(el);
+    }
+  }
+
+  addWidget(tag) {
+    if (!AVAILABLE_WIDGETS.some(w => w.tag === tag)) return;
+    if (this.state.widgets.includes(tag)) return;
+    this.state.widgets.push(tag);
+    this.saveState();
+    this.renderSidebar();
+    this.renderGrid();
+  }
+
+  removeWidget(tag) {
+    const i = this.state.widgets.indexOf(tag);
+    if (i === -1) return;
+    this.state.widgets.splice(i, 1);
+    this.saveState();
+    this.renderSidebar();
+    this.renderGrid();
+  }
+});

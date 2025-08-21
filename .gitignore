@@ -1,0 +1,15 @@
+# Node
+node_modules/
+.npmrc
+
+# Wrangler local state
+.wrangler/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Optional build caches (if you ever add a bundler later)
+dist/
+.build/
+.cache/
