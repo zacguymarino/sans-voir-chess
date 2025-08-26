@@ -1,5 +1,5 @@
 // sw.js
-const CACHE_VERSION = "sv-v2"; // bump whenever you change APP_SHELL
+const CACHE_VERSION = "sv-v3"; // bump whenever you change APP_SHELL
 const APP_SHELL = [
   "/", // index is served at '/', not '/index.html'
 
@@ -32,6 +32,7 @@ const APP_SHELL = [
   "/static/js/components/sv-board.js",
   "/static/js/components/sv-timer.js",
   "/static/js/peek-board.js",
+  "/static/js/components/coord-trainer.js",
 
   // Puzzles
   "/static/js/puzzles/mate_bestmove_puzzles.js",
@@ -41,6 +42,9 @@ const APP_SHELL = [
   "/static/img/icon-192.png",
   "/static/img/icon-512.png",
   "/static/manifest.webmanifest",
+
+  // Utils
+  "/static/js/utils/mobile-tweaks.js",
 ];
 
 // Helper: add each asset individually so one 404 doesn't nuke the whole install.

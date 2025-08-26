@@ -6,20 +6,3 @@ body {
   color: var(--fg);
   font-family: var(--font-sans);
 }
-
-.app-grid {
-  /* Masonry via multi-columns */
-  column-gap: var(--space-3, 12px);
-  padding: var(--space-3, 12px);
-}
-
-.app-grid > * {
-  break-inside: avoid;
-  margin-bottom: var(--space-3, 12px);
-  display: block; /* ensure proper column flow */
-}
-
-/* Responsive column counts */
-@media (max-width: 640px) { .app-grid { column-count: 1; } }
-@media (min-width: 641px) and (max-width: 1024px) { .app-grid { column-count: 2; } }
-@media (min-width: 1025px) { .app-grid { column-count: 3; } }

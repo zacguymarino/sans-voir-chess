@@ -61,6 +61,7 @@ themeSheet.replaceSync(`
   .divider { height:1px; background:var(--border); margin:var(--space-3) 0; }
 
   .component-container {
+    min-width: 220px;
     border: 2px solid var(--color-border-strong);
     border-radius: var(--radius-lg, var(--radius));
     padding: var(--space-2);

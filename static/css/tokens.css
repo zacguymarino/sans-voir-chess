@@ -24,6 +24,8 @@
   --shadow-lg: 0 6px 18px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.06);
 
   --color-border-strong: #000000;
+
+  --tile-min: 270px;
 }
 
 @media (prefers-color-scheme: dark) {

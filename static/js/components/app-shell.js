@@ -8,6 +8,7 @@ const AVAILABLE_WIDGETS = [
   { tag: "knight-path",    title: "Knight Path" },
   { tag: "bishop-path",    title: "Bishop Path" },
   { tag: "mate-trainer",   title: "Mate Trainer" },
+  { tag: "coord-trainer",  title: "Coordinate Trainer" }
 ];
 
 const LS_KEY = "svc.widgets";
@@ -107,18 +108,30 @@ customElements.define("app-shell", class extends HTMLElement {
         .btn-danger { color: var(--danger); border-color: var(--border); }
 
         main { min-width: 0; }
+
         .app-grid {
-          column-gap: var(--space-3, 12px);
           padding: var(--space-3, 12px);
+          column-gap: var(--space-3, 12px);
+          -webkit-column-gap: var(--space-3, 12px); /* Safari */
+
+          /* Let container width determine how many columns fit */
+          column-width: var(--tile-min, 340px); /* from tokens.css */
+          column-count: 3;                      /* cap on large screens */
+          column-fill: balance;
         }
         .app-grid > * {
-          break-inside: avoid;
-          margin-bottom: var(--space-3, 12px);
           display: block;
+          width: 100%;
+          max-width: 100%;
+          margin: 0 0 var(--space-3, 12px);
+
+          break-inside: avoid;
+          -webkit-column-break-inside: avoid; /* Safari */
+          page-break-inside: avoid;
         }
-        @media (max-width: 640px) { .app-grid { column-count: 1; } }
-        @media (min-width: 641px) and (max-width: 1024px) { .app-grid { column-count: 2; } }
-        @media (min-width: 1025px) { .app-grid { column-count: 3; } }
+        @media (max-width: 640px) {
+          .app-grid { column-count: 1; column-width: auto; }
+        }
       </style>
 
       <header class="appbar">
@@ -292,8 +305,6 @@ customElements.define("app-shell", class extends HTMLElement {
     }
     try { localStorage.setItem('svc.theme', mode); } catch {}
     if (!opts.silent) this._updateThemeUI(mode);
-    // Ensure :root signals proper color-scheme to UA for form controls
-    // (Handled by tokens block via color-scheme property)
   }
 
   _updateThemeUI(mode) {

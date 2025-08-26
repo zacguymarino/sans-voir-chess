@@ -8,6 +8,7 @@ import "./components/bishop-path.js";
 import "./components/sv-board.js";
 import "./components/mate-trainer.js";
 import "./components/about-widget.js";
+import "./components/coord-trainer.js";
 
 // PWA service worker registration
 if ("serviceWorker" in navigator) {
