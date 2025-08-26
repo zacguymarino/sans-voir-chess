@@ -14,8 +14,6 @@
   --radius: 10px;
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
 
-  --tile-min: 280px;
-
   --input-width: 30%;
 
   /* add a few tokens your theme uses (see #2 below) */
@@ -30,12 +28,71 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:#0b0f14; --fg:#e5e7eb; --muted-fg:#9ca3af;
-    --border:#1f2937; --card:#0f141a;
-    --accent:#60a5fa; --accent-contrast:#0b0f14;
-    --success:#34d399; --danger:#f87171;
+    /* Core surfaces */
+    --bg: #0b0e11;           /* off-black page */
+    --card: #2f3a48;         /* raised card */
+    --color-surface: #0e131a;/* inner panels / component-container */
+    --border: #2a2f38;       /* darker silver border */
+    --shadow-lg: 0 10px 24px rgba(0,0,0,.50), 0 2px 10px rgba(0,0,0,.40);
 
-    --color-surface: #0e1319;
-    --shadow-lg: 0 10px 24px rgba(0,0,0,.35), 0 2px 10px rgba(0,0,0,.25);
+    /* Type */
+    --fg: #e6e9ee;           /* near-white text */
+    --muted-fg: #a8b0ba;     /* darker-silver for secondary text */
+
+    /* Accent = moonlight blue (light, slightly glossy) */
+    --accent: #8ecaff;       /* primary accent */
+    --accent-contrast: #0b0f14; /* dark text on that light blue */
+    /* If you prefer white text on the accent button, flip this: */
+    /* --accent-contrast: #ffffff; */
+
+    /* Secondary & utility */
+    --secondary: #878d95;    /* slate/silver chip background */
+    --off-white: #e3e6ea;    /* for .btn-white, etc. */
+    --off-black: #0b0f14;    /* for .btn-black, etc. */
+
+    /* Inputs (separate from .btn-white so they can be darker) */
+    --input-bg: #0f141b;     /* cool dark input field */
+
+    /* Status colors (kept readable on dark) */
+    --success: #34d399;
+    --danger:  #f87171;
+
+    /* Optional “brand helpers” if you want them later */
+    --moon-400: #8ecaff;     /* same as --accent */
+    --moon-600: #5aaee8;
+    --silver-500: #7c858f;
   }
 }
+
+
+/* Manual overrides take precedence over system preference */
+:root[data-theme="light"] { color-scheme: light; }
+/* If you want to force-light variables too, you can re-declare them here, but
+   since your base :root already defines light, it's not required. */
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Use the same “moonlight” dark variables you picked earlier */
+  --bg: #0b0e11;
+  --card: #2f3a48;
+  --color-surface: #0e131a;
+  --border: #2a2f38;
+  --shadow-lg: 0 10px 24px rgba(0,0,0,.50), 0 2px 10px rgba(0,0,0,.40);
+
+  --fg: #e6e9ee;
+  --muted-fg: #a8b0ba;
+
+  --accent: #8ecaff;            /* moonlight blue */
+  --accent-contrast: #0b0f14;   /* or #fff if you prefer white text on the button */
+
+  --secondary: #878d95;
+  --off-white: #e3e6ea;
+  --off-black: #0b0f14;
+
+  --input-bg: #0f141b;
+
+  --success: #34d399;
+  --danger:  #f87171;
+}
+

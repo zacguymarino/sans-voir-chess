@@ -12,6 +12,7 @@ import { themeSheet } from "../ui-theme.js";
 import { Chess } from "../chess.js";
 import { peekBoard } from "../peek-board.js";
 import { PUZZLES } from "../puzzles/mate_bestmove_puzzles.js";
+import { hardenTextInputs } from "../utils/mobile-tweaks.js";
 
 const PIECE_SPRITE = "/static/img/ChessPiecesArray.png"; // Q K R N B P (cols), Black row top, White row bottom
 const SPRITE_COL = { q:0, k:1, r:2, n:3, b:4, p:5 };     // column mapping
@@ -113,6 +114,7 @@ customElements.define("mate-trainer", class extends HTMLElement {
     .piece-sep { opacity: .6; } /* commas look subtle */
     `;
     this.shadowRoot.appendChild(style);
+    hardenTextInputs(this.shadowRoot);
 
     // refs
     this.ui = {
@@ -208,7 +210,9 @@ customElements.define("mate-trainer", class extends HTMLElement {
     }
 
     // focus the first
-    if (inputs[0]) inputs[0].focus();
+    if (inputs[0] && !this.hasAttribute("data-no-autofocus")) {
+      try { inputs[0].focus({ preventScroll: true }); } catch { inputs[0].focus(); }
+    }
 
     // Keep a local reference
     this._inputs = inputs;
@@ -225,7 +229,7 @@ customElements.define("mate-trainer", class extends HTMLElement {
   }
 
   trySubmitInput(inpEl) {
-    const raw = (inpEl.value || "").trim();
+    const raw = (inpEl.value || "").trim().toLowerCase();
     const okFormat = /^[a-h][1-8][a-h][1-8][qnrb]?$/i.test(raw);
     if (!okFormat) {
       this.setStatus(`⚠️ Invalid move. Use UCI like "e2e4" or "g7g8q".`, "warn");

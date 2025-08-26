@@ -34,20 +34,21 @@ customElements.define("about-widget", class extends HTMLElement {
       <section class="scrolly card component-container" role="region" aria-label="About Sans Voir Chess">
         <tile-title title="About Sans Voir Chess"></tile-title>
         <div class="content-medium stack">
-          <p><strong>Sans Voir</strong> (“without seeing”) is a blindfold chess trainer. 
-          The goal is simple: help you build a durable mental board by drilling coordinate colors, knight paths, 
+          <p><strong>Sans Voir Chess</strong> is a blindfold chess trainer. 
+          The goal is simple: help you build a durable mental board by drilling coordinate colors, knight and bishop paths, 
           quick mates/best moves, and playing fully blindfolded vs. Stockfish.</p>
 
           <div class="divider"></div>
 
           <h3 class="title" style="font-size:1rem;">Why the name?</h3>
-          <p>“Sans Voir” nods to blindfold play—training vision and calculation without visual help.</p>
+          <p>“Sans Voir” historically nods to blindfold chess play, and translates from French as “without seeing”.</p>
 
           <div class="divider"></div>
 
           <h3 class="title" style="font-size:1rem;">Open Source</h3>
           <p>The app is fully FOSS so you can read, tinker, and contribute. 
           Core UI and training widgets are custom. External parts used are credited below.</p>
+          <a href="https://github.com/zacguymarino/sans-voir-chess" target="_blank" rel="noopener">GitHub Repository</a>
 
           <div class="divider"></div>
 
@@ -94,7 +95,7 @@ customElements.define("about-widget", class extends HTMLElement {
           <div class="divider"></div>
 
           <h3 class="title" style="font-size:1rem;">Support the project</h3>
-          <p>If this helps your training, you can support development:</p>
+          <p>Hi, I'm Zac and I built this web app by myself for fun. If this helps your training, you can support development:</p>
           <p>
             <a class="btn btn-primary" href="https://buymeacoffee.com/zacguy" target="_blank" rel="noopener">
               Buy me a coffee ☕

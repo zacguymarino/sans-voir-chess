@@ -36,11 +36,11 @@ themeSheet.replaceSync(`
      (widgets can still set width:100% on their own wrapper) */
   .input, input[type="number"], input[type="text"] {
     width: var(--input-width, auto);
-    min-width: 8ch;
+    min-width: 5ch;
     padding: 8px 10px;
     border: 1px solid var(--border);
     border-radius: 8px;
-    background: var(--off-white);
+    background: var(--input-bg, var(--off-white));
     color: var(--fg);
   }
   .input:focus-visible, select:focus-visible, input:focus-visible {
@@ -52,7 +52,7 @@ themeSheet.replaceSync(`
     padding:8px 10px;
     border:1px solid var(--border);
     border-radius:8px;
-    background: var(--off-white);
+    background: var(--input-bg, var(--off-white));
     color:var(--fg);
   }
 
@@ -64,7 +64,6 @@ themeSheet.replaceSync(`
     border: 2px solid var(--color-border-strong);
     border-radius: var(--radius-lg, var(--radius));
     padding: var(--space-2);
-    background-color: var(--color-surface, var(--card));
     box-shadow: var(--shadow-lg, 0 6px 18px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.06));
   }
 

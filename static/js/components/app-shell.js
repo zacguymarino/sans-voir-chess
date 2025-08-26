@@ -41,7 +41,7 @@ customElements.define("app-shell", class extends HTMLElement {
           aside.open {
             display: block;
             position: sticky; top: 58px; z-index: 10;
-            background: var(--border);
+            background: var(--secondary);
             border-bottom: 2px solid var(--off-black);
           }
         }
@@ -70,6 +70,12 @@ customElements.define("app-shell", class extends HTMLElement {
           padding: var(--space-3);
           border-right: 1px solid var(--border);
         }
+
+        .theme-toggle { display:flex; gap:6px; flex-wrap:wrap; }
+        .theme-toggle .btn-sm[aria-pressed="true"] {
+          background: var(--accent); color: var(--accent-contrast); border-color: transparent;
+        }
+
         .side-card {
           background: var(--card);
           border: 1px solid var(--border);
@@ -133,6 +139,15 @@ customElements.define("app-shell", class extends HTMLElement {
             <h3 class="section-title">Available</h3>
             <div class="list" id="availableList"></div>
           </div>
+          <div class="side-card">
+            <h3 class="section-title">Appearance</h3>
+            <div class="theme-toggle">
+              <button type="button" class="btn-sm" data-mode="auto"  aria-pressed="false">Auto</button>
+              <button type="button" class="btn-sm" data-mode="dark"  aria-pressed="false">Dark</button>
+              <button type="button" class="btn-sm" data-mode="light" aria-pressed="false">Light</button>
+            </div>
+            <div id="themeNote" class="muted" style="margin-top:6px; font-size:.9rem;">Follows system theme.</div>
+          </div>
         </aside>
 
         <main>
@@ -140,6 +155,25 @@ customElements.define("app-shell", class extends HTMLElement {
         </main>
       </div>
     `;
+
+    // THEME: setup
+    this._themeBtns = this.shadowRoot.querySelectorAll('.theme-toggle .btn-sm');
+    this._themeNote = this.shadowRoot.querySelector('#themeNote');
+    this._systemMql = window.matchMedia?.('(prefers-color-scheme: dark)');
+
+    this._themeBtns.forEach(btn => {
+      btn.addEventListener('click', () => this.applyTheme(btn.dataset.mode));
+    });
+
+    // Apply saved or default (auto)
+    const saved = localStorage.getItem('svc.theme');
+    const initial = (saved === 'light' || saved === 'dark' || saved === 'auto') ? saved : 'auto';
+    this.applyTheme(initial, {silent:true});
+
+    // If on Auto, update note when system theme changes
+    this._systemMql?.addEventListener?.('change', () => {
+      if ((localStorage.getItem('svc.theme') || 'auto') === 'auto') this._updateThemeUI('auto');
+    });
 
     // Mobile toggle
     this.shadowRoot.querySelector("#toggleSidebar")?.addEventListener("click", () => {
@@ -222,7 +256,9 @@ customElements.define("app-shell", class extends HTMLElement {
     grid.innerHTML = "";
     for (const tag of this.state.widgets) {
       const el = document.createElement(tag);
+      el.setAttribute("data-no-autofocus", "");
       grid.appendChild(el);
+      requestAnimationFrame(() => el.removeAttribute("data-no-autofocus"));
     }
   }
 
@@ -243,4 +279,38 @@ customElements.define("app-shell", class extends HTMLElement {
     this.renderSidebar();
     this.renderGrid();
   }
+
+  applyTheme(mode, opts = {}) {
+    const root = document.documentElement;
+    if (mode === 'light') {
+      root.setAttribute('data-theme', 'light');      // force-light
+    } else if (mode === 'dark') {
+      root.setAttribute('data-theme', 'dark');       // force-dark
+    } else {
+      root.removeAttribute('data-theme');            // auto (honor @media)
+      mode = 'auto';
+    }
+    try { localStorage.setItem('svc.theme', mode); } catch {}
+    if (!opts.silent) this._updateThemeUI(mode);
+    // Ensure :root signals proper color-scheme to UA for form controls
+    // (Handled by tokens block via color-scheme property)
+  }
+
+  _updateThemeUI(mode) {
+    // Update pressed state
+    this._themeBtns?.forEach(b => {
+      const pressed = (b.dataset.mode === mode);
+      b.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+    });
+    // Update helper note
+    const sysDark = !!this._systemMql?.matches;
+    if (this._themeNote) {
+      if (mode === 'auto') {
+        this._themeNote.textContent = `Auto (system: ${sysDark ? 'dark' : 'light'})`;
+      } else {
+        this._themeNote.textContent = (mode === 'dark') ? 'Dark mode' : 'Light mode';
+      }
+    }
+  }
+
 });

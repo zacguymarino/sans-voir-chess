@@ -19,7 +19,7 @@ customElements.define("move-input", class extends HTMLElement {
 
     this.form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const move = (this.inputEl.value || "").trim();
+      const move = (this.inputEl.value || "").trim().toLowerCase();
       const ok = /^[a-h][1-8][a-h][1-8][qnrb]?$/i.test(move);
       if (!ok) {
         this.inputEl.setAttribute("aria-invalid", "true");
@@ -31,7 +31,9 @@ customElements.define("move-input", class extends HTMLElement {
       this.errEl.textContent = "";
       this.dispatchEvent(new CustomEvent("play-move", { detail: move, bubbles: true }));
       this.inputEl.value = "";
-      this.inputEl.focus();
+      if (!this.hasAttribute("data-no-autofocus")) {
+        try { this.inputEl.focus({ preventScroll: true }); } catch { this.inputEl.focus(); }
+      }
     });
   }
 });

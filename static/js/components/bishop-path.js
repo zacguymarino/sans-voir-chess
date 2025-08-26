@@ -3,6 +3,7 @@
 
 import { themeSheet } from "../ui-theme.js";
 import { Chess } from "../chess.js";
+import { hardenTextInputs } from "../utils/mobile-tweaks.js";
 
 customElements.define("bishop-path", class extends HTMLElement {
   constructor() {
@@ -58,6 +59,7 @@ customElements.define("bishop-path", class extends HTMLElement {
         </div>
       </section>
     `;
+    hardenTextInputs(this.shadowRoot);
 
     this.ui = {
       start: this.shadowRoot.querySelector("#start"),
@@ -125,7 +127,9 @@ customElements.define("bishop-path", class extends HTMLElement {
     this.ui.target.textContent = this.target;
     this.renderPath();
     this.ui.sq.value = "";
-    this.ui.sq.focus();
+    if (!this.hasAttribute("data-no-autofocus")) {
+      try { this.ui.sq.focus({ preventScroll: true }); } catch { this.ui.sq.focus(); }
+    }
 
     if ((this.optimalPath.length - 1) === 0) {
       this.info(`Already there. Hit “Next Puzzle”.`);
@@ -136,7 +140,9 @@ customElements.define("bishop-path", class extends HTMLElement {
     this.userPath = [];
     this.clearMsg();
     this.renderPath();
-    this.ui.sq.focus();
+    if (!this.hasAttribute("data-no-autofocus")) {
+      try { this.ui.sq.focus({ preventScroll: true }); } catch { this.ui.sq.focus(); }
+    }
   }
 
   // ===== User interactions =====

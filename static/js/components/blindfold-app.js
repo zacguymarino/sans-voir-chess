@@ -3,7 +3,8 @@ import Engine from "../engine.js";
 import Game from "../game.js";
 import "./move-history.js";
 import "./move-input.js";
-import { peekBoard } from "../peek-board.js"; // <-- add this import
+import { peekBoard } from "../peek-board.js";
+import { hardenTextInputs } from "../utils/mobile-tweaks.js";
 
 customElements.define("blindfold-app", class extends HTMLElement {
   constructor() {
@@ -29,7 +30,7 @@ customElements.define("blindfold-app", class extends HTMLElement {
           </label>
 
           <label class="field" for="difficulty">Difficulty
-            <input id="difficulty" class="input" type="number" min="0" max="20" value="0" />
+            <input id="difficulty" class="input" type="number" min="0" max="20" value="0" style="--input-width: 5ch;" />
           </label>
 
           <div class="row" style="margin-left:auto">
@@ -41,15 +42,11 @@ customElements.define("blindfold-app", class extends HTMLElement {
         <div class="divider"></div>
 
         <!-- Peek controls (overlay-based board) -->
-        <div class="row" style="align-items:center; gap:12px;">
-          <div class="col" style="min-width: 180px;">
-            <label class="field" for="peekSeconds">Peek (seconds)
-              <input id="peekSeconds" class="input" type="number" min="1" max="30" value="3" />
-            </label>
-            <div class="row" style="gap:8px; margin-top:6px;">
-              <button id="peekBtn" class="btn btn-primary" type="button" title="Reveal board temporarily">Peek</button>
-            </div>
-          </div>
+        <div class="row">
+          <label class="field" for="peekSeconds">Peek (sec): 
+          </label>
+          <input id="peekSeconds" class="input" type="number" min="1" max="30" value="3" style="--input-width: 5ch;" />
+          <button id="peekBtn" class="btn btn-primary" type="button" title="Reveal board temporarily">Peek</button>
         </div>
 
         <div class="divider"></div>
@@ -59,6 +56,7 @@ customElements.define("blindfold-app", class extends HTMLElement {
         <move-input></move-input>
       </section>
     `;
+    hardenTextInputs(this.shadowRoot);
 
     // refs
     this.historyEl = this.shadowRoot.querySelector("move-history");
