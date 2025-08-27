@@ -1,5 +1,5 @@
 // sw.js
-const CACHE_VERSION = "sv-v4"; // bump whenever you change APP_SHELL
+const CACHE_VERSION = "sv-v5"; // bump whenever you change APP_SHELL
 const APP_SHELL = [
   "/", // index is served at '/', not '/index.html'
 
@@ -45,6 +45,7 @@ const APP_SHELL = [
 
   // Utils
   "/static/js/utils/mobile-tweaks.js",
+  "/static/js/utils/move-parse.js",
 ];
 
 // Helper: add each asset individually so one 404 doesn't nuke the whole install.
