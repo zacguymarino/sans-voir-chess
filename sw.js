@@ -1,5 +1,5 @@
 // sw.js
-const CACHE_VERSION = "sv-v5"; // bump whenever you change APP_SHELL
+const CACHE_VERSION = "sv-v6"; // bump whenever you change APP_SHELL
 const APP_SHELL = [
   "/", // index is served at '/', not '/index.html'
 
