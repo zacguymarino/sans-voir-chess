@@ -1,5 +1,5 @@
 // sw.js
-const CACHE_VERSION = "sv-v3"; // bump whenever you change APP_SHELL
+const CACHE_VERSION = "sv-v4"; // bump whenever you change APP_SHELL
 const APP_SHELL = [
   "/", // index is served at '/', not '/index.html'
 
@@ -16,7 +16,7 @@ const APP_SHELL = [
 
   // Workers / WASM
   "/static/js/stockfish.worker.js",
-  "/static/js/stockfish.worker.wasm", // <-- fixed leading slash
+  "/static/js/stockfish.worker.wasm",
 
   // Components
   "/static/js/components/app-shell.js",

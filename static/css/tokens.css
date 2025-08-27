@@ -1,100 +1,118 @@
+/* ---------- Base + shared tokens (don't change at runtime) ---------- */
 :root {
-  /* light tokens */
-  --bg:#8a1538; --fg:#111827; --muted-fg:#6b7280;
-  --border:#7c878e; --card:#cccccc;
-  --accent:#c28a54; --accent-contrast:#ffffff;
-  --success:#0a7b39; --danger:#9b1c1c;
-  --off-white: #f8f9fa; --secondary: #7c878e;
-  --off-black: #212529;
-
-
+  /* Fonts, radii, spacing */
   --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-
   --radius: 10px;
+  --radius-lg: 14px;
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
-
+  --space-xs: 6px; --space-sm: 10px;
+  --tile-min: 270px;
   --input-width: 30%;
 
-  /* add a few tokens your theme uses (see #2 below) */
-  --radius-lg: 14px;
-  --space-xs: 6px;
-  --space-sm: 10px;
-  --color-surface: var(--card);
-  --shadow-lg: 0 6px 18px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.06);
+  /* UA hint: both schemes supported (form controls, scrollbars) */
+  color-scheme: light dark;
 
-  --color-border-strong: #000000;
+  /* ---------- Light palette (values defined ONCE) ---------- */
+  --bg-light:#8a1538; --fg-light:#111827; --muted-fg-light:#6b7280;
+  --border-light:#7c878e; --card-light:#cccccc;
+  --accent-light:#c28a54; --accent-contrast-light:#ffffff;
+  --success-light:#0a7b39; --danger-light:#9b1c1c;
+  --secondary-light:#7c878e; --off-white-light:#f8f9fa; --off-black-light:#212529;
+  --input-bg-light: var(--off-white-light);
+  --surface-light: var(--card-light);
+  --shadow-lg-light: 0 6px 18px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.06);
+  --border-strong-light: #000000;
 
-  --tile-min: 270px;
+  /* ---------- Dark palette (“moonlight”) (values defined ONCE) ---------- */
+  --bg-dark:#0b0e11; --fg-dark:#e6e9ee; --muted-fg-dark:#a8b0ba;
+  --border-dark:#2a2f38; --card-dark:#2f3a48;
+  --accent-dark:#8ecaff; --accent-contrast-dark:#0b0f14; /* or #fff if you prefer */
+  --success-dark:#34d399; --danger-dark:#f87171;
+  --secondary-dark:#878d95; --off-white-dark:#e3e6ea; --off-black-dark:#0b0f14;
+  --input-bg-dark:#0f141b;
+  --surface-dark:#0e131a;
+  --shadow-lg-dark: 0 10px 24px rgba(0,0,0,.50), 0 2px 10px rgba(0,0,0,.40);
+  --border-strong-dark:#000000;
+
+  /* ---------- Default mapping (LIGHT by default) ---------- */
+  --bg: var(--bg-light);
+  --fg: var(--fg-light);
+  --muted-fg: var(--muted-fg-light);
+  --border: var(--border-light);
+  --card: var(--card-light);
+  --accent: var(--accent-light);
+  --accent-contrast: var(--accent-contrast-light);
+  --success: var(--success-light);
+  --danger: var(--danger-light);
+  --secondary: var(--secondary-light);
+  --off-white: var(--off-white-light);
+  --off-black: var(--off-black-light);
+  --input-bg: var(--input-bg-light);
+  --color-surface: var(--surface-light);
+  --shadow-lg: var(--shadow-lg-light);
+  --color-border-strong: var(--border-strong-light);
 }
 
+/* System preference → remap tokens to DARK palette */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Core surfaces */
-    --bg: #0b0e11;           /* off-black page */
-    --card: #2f3a48;         /* raised card */
-    --color-surface: #0e131a;/* inner panels / component-container */
-    --border: #2a2f38;       /* darker silver border */
-    --shadow-lg: 0 10px 24px rgba(0,0,0,.50), 0 2px 10px rgba(0,0,0,.40);
-
-    /* Type */
-    --fg: #e6e9ee;           /* near-white text */
-    --muted-fg: #a8b0ba;     /* darker-silver for secondary text */
-
-    /* Accent = moonlight blue (light, slightly glossy) */
-    --accent: #8ecaff;       /* primary accent */
-    --accent-contrast: #0b0f14; /* dark text on that light blue */
-    /* If you prefer white text on the accent button, flip this: */
-    /* --accent-contrast: #ffffff; */
-
-    /* Secondary & utility */
-    --secondary: #878d95;    /* slate/silver chip background */
-    --off-white: #e3e6ea;    /* for .btn-white, etc. */
-    --off-black: #0b0f14;    /* for .btn-black, etc. */
-
-    /* Inputs (separate from .btn-white so they can be darker) */
-    --input-bg: #0f141b;     /* cool dark input field */
-
-    /* Status colors (kept readable on dark) */
-    --success: #34d399;
-    --danger:  #f87171;
-
-    /* Optional “brand helpers” if you want them later */
-    --moon-400: #8ecaff;     /* same as --accent */
-    --moon-600: #5aaee8;
-    --silver-500: #7c858f;
+    --bg: var(--bg-dark);
+    --fg: var(--fg-dark);
+    --muted-fg: var(--muted-fg-dark);
+    --border: var(--border-dark);
+    --card: var(--card-dark);
+    --accent: var(--accent-dark);
+    --accent-contrast: var(--accent-contrast-dark);
+    --success: var(--success-dark);
+    --danger: var(--danger-dark);
+    --secondary: var(--secondary-dark);
+    --off-white: var(--off-white-dark);
+    --off-black: var(--off-black-dark);
+    --input-bg: var(--input-bg-dark);
+    --color-surface: var(--surface-dark);
+    --shadow-lg: var(--shadow-lg-dark);
+    --color-border-strong: var(--border-strong-dark);
   }
 }
 
-
-/* Manual overrides take precedence over system preference */
-:root[data-theme="light"] { color-scheme: light; }
-/* If you want to force-light variables too, you can re-declare them here, but
-   since your base :root already defines light, it's not required. */
+/* Manual overrides (placed AFTER the media block so they win on mobile) */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: var(--bg-light);
+  --fg: var(--fg-light);
+  --muted-fg: var(--muted-fg-light);
+  --border: var(--border-light);
+  --card: var(--card-light);
+  --accent: var(--accent-light);
+  --accent-contrast: var(--accent-contrast-light);
+  --success: var(--success-light);
+  --danger: var(--danger-light);
+  --secondary: var(--secondary-light);
+  --off-white: var(--off-white-light);
+  --off-black: var(--off-black-light);
+  --input-bg: var(--input-bg-light);
+  --color-surface: var(--surface-light);
+  --shadow-lg: var(--shadow-lg-light);
+  --color-border-strong: var(--border-strong-light);
+}
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-
-  /* Use the same “moonlight” dark variables you picked earlier */
-  --bg: #0b0e11;
-  --card: #2f3a48;
-  --color-surface: #0e131a;
-  --border: #2a2f38;
-  --shadow-lg: 0 10px 24px rgba(0,0,0,.50), 0 2px 10px rgba(0,0,0,.40);
-
-  --fg: #e6e9ee;
-  --muted-fg: #a8b0ba;
-
-  --accent: #8ecaff;            /* moonlight blue */
-  --accent-contrast: #0b0f14;   /* or #fff if you prefer white text on the button */
-
-  --secondary: #878d95;
-  --off-white: #e3e6ea;
-  --off-black: #0b0f14;
-
-  --input-bg: #0f141b;
-
-  --success: #34d399;
-  --danger:  #f87171;
+  --bg: var(--bg-dark);
+  --fg: var(--fg-dark);
+  --muted-fg: var(--muted-fg-dark);
+  --border: var(--border-dark);
+  --card: var(--card-dark);
+  --accent: var(--accent-dark);
+  --accent-contrast: var(--accent-contrast-dark);
+  --success: var(--success-dark);
+  --danger: var(--danger-dark);
+  --secondary: var(--secondary-dark);
+  --off-white: var(--off-white-dark);
+  --off-black: var(--off-black-dark);
+  --input-bg: var(--input-bg-dark);
+  --color-surface: var(--surface-dark);
+  --shadow-lg: var(--shadow-lg-dark);
+  --color-border-strong: var(--border-strong-dark);
 }
-
